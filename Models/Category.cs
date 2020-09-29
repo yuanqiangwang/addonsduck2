@@ -46,6 +46,7 @@ namespace AddonsDuck2.Models
 
     public class CategoryModel : Category
     {
+        public Uri avatarFile { get; set; }
         public ObservableCollection<CategoryModel> ChildList { get; set; }
         = new ObservableCollection<CategoryModel>();
     }

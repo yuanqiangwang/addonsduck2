@@ -18,7 +18,7 @@
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type m:CategoryModel}" ItemsSource="{Binding ChildList}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding avatarUrl}" Margin="1" Width="20" Height="20" />
+                        <Image Source="{Binding avatarFile}" Margin="1" Width="20" Height="20" />
                         <TextBlock Text="{Binding name}" Margin="1"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>

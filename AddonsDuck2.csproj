@@ -73,6 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Duck.cs" />
     <Compile Include="Models\Addon.cs" />
     <Compile Include="Models\AddonDisplay.cs" />
     <Compile Include="Models\Category.cs" />

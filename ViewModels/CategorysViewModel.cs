@@ -65,6 +65,7 @@ namespace AddonsDuck2.ViewModels
                 categoryModel.id = item.id;
                 categoryModel.name = item.name;
                 categoryModel.avatarUrl = item.avatarUrl;
+                categoryModel.avatarFile= Duck.GetThumbnailUri(item.avatarUrl, "category", item.id);
                 categoryModel.ChildList = PrepareData(categories, item.id);
 
                 categoryModels.Add(categoryModel);
