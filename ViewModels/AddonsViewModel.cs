@@ -98,8 +98,6 @@ namespace AddonsDuck2.ViewModels
                     list.Add(addonDisplay);
                 }
             }
-
-
             AddonsDisplay = new ObservableCollection<AddonDisplay>(list);
 
         }
