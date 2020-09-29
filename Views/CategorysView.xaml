@@ -9,7 +9,7 @@
     xmlns:m="clr-namespace:AddonsDuck2.Models"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
     <Grid Margin="0,0,10,0">
-        <TreeView x:Name="treeviewCategorie" ItemsSource="{Binding Categories}">
+        <TreeView x:Name="treeviewCategorie"  ItemsSource="{Binding Categories}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedItemChanged">
                     <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}" CommandParameter="{Binding ElementName=treeviewCategorie,Path=SelectedItem}"/>

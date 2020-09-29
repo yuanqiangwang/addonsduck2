@@ -11,7 +11,9 @@ using Prism.Common;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.IO;
-
+using Prism.Commands;
+using AddonsDuck2.Duck;
+using Prism.Events;
 
 namespace AddonsDuck2.ViewModels
 {
@@ -26,16 +28,30 @@ namespace AddonsDuck2.ViewModels
             set { SetProperty(ref _addonsDisplay, value); }
         }
 
+
+        /// <summary>
+        /// 依赖注入接收
+        /// </summary>
+        //IApplicationCommands _applicationCommands;
+
+        IEventAggregator _ea;
+        public DelegateCommand<object> ReloadAddonsCommand { get; private set; }
+
         private string _gameVersionFlavor = "wow_classic";
 
-        public AddonsViewModel()
+        public AddonsViewModel(IApplicationCommands applicationCommands, IEventAggregator ea)//依赖注入 全局command
         {
-            GetData();
+            _ea = ea;
+            _ea.GetEvent<MessageSentEvent>().Subscribe(GetData);
+ 
         }
 
-        public async void GetData()
+        public async void GetData(object obj)
         {
-            string json = await AddonSearchAsync(0, 0, _gameVersionFlavor, 20);
+            CategoryModel categoryModel = obj as CategoryModel;
+
+
+            string json = await AddonSearchAsync(categoryModel.id==1?0: categoryModel.id, 0, _gameVersionFlavor, 20);
             FilterAddons(json);
         }
 
@@ -89,10 +105,10 @@ namespace AddonsDuck2.ViewModels
                     addonDisplay.name = addon.name;
                     addonDisplay.websiteUrl = addon.websiteUrl;
                     addonDisplay.summary = addon.summary;
-                    addonDisplay.downloadCount = Duck.FormatNum(addon.downloadCount);
+                    addonDisplay.downloadCount = Tools.FormatNum(addon.downloadCount);
                     addonDisplay.thumbnailUrl = addon.attachments.Count > 0 ?
                         addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : "";
-                    addonDisplay.thumbnailFile = Duck.GetThumbnailUri(addonDisplay.thumbnailUrl, "addon", addonDisplay.id);
+                    addonDisplay.thumbnailFile = Tools.GetThumbnailUri(addonDisplay.thumbnailUrl, "addon", addonDisplay.id);
 
 
                     list.Add(addonDisplay);

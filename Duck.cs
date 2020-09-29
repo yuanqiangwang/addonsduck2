@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Prism.Commands;
+using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,9 +8,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AddonsDuck2
+namespace AddonsDuck2.Duck
 {
-    public static class Duck
+    public static class Tools
     {
 
         public static Uri GetThumbnailUri(string url, string type, int uid)
@@ -29,6 +31,13 @@ namespace AddonsDuck2
                     break;
             }
 
+
+
+            if (string.IsNullOrEmpty(url))
+            {
+
+                return new Uri("pack://SiteOfOrigin:,,,/wow");
+            }
             if (!File.Exists(path + uid.ToString()))
             {
                 SaveThumbnail(url, path, uid);
@@ -47,6 +56,7 @@ namespace AddonsDuck2
             {
                 return;
             }
+
             using (WebClient wc = new WebClient())
             {
                 await wc.DownloadFileTaskAsync(new Uri(url), path + uid.ToString());
@@ -56,17 +66,15 @@ namespace AddonsDuck2
         }
 
 
-
-
         public static string FormatNum(decimal longnum)
         {
             string formatednum;
-            if (longnum > 1000000)
-                formatednum = Math.Round(longnum / 1000000, 1).ToString() + "百万";
+            if (longnum > 100000000)
+                formatednum = Math.Round(longnum / 100000000, 2).ToString() + "亿";
             else if (longnum > 10000)
-                formatednum = Math.Round(longnum / 1000, 1).ToString() + "万";
+                formatednum = Math.Round(longnum / 10000, 0).ToString() + "万";
             else
-                formatednum = longnum.ToString();
+                formatednum = Math.Round(longnum,0).ToString();
 
 
             return formatednum;
@@ -113,5 +121,25 @@ namespace AddonsDuck2
             }
         }
 
+    }
+
+    public interface IApplicationCommands
+    {
+        CompositeCommand ReloadAddonsCommand { get; }
+    }
+
+
+    public class MessageSentEvent : PubSubEvent<object>
+    {
+    }
+
+
+    public class ApplicationCommands : IApplicationCommands
+    {
+        private CompositeCommand _reloadAddonsCommand = new CompositeCommand();
+        public CompositeCommand ReloadAddonsCommand
+        {
+            get { return _reloadAddonsCommand; }
+        }
     }
 }

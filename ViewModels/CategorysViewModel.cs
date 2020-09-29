@@ -11,6 +11,8 @@ using RestSharp;
 using Newtonsoft.Json;
 using System.Windows.Controls;
 using Prism.Commands;
+using AddonsDuck2.Duck;
+using Prism.Events;
 
 namespace AddonsDuck2.ViewModels
 {
@@ -23,20 +25,33 @@ namespace AddonsDuck2.ViewModels
             set { SetProperty(ref _categories, value); }
 
         }
+        private IApplicationCommands _applicationCommands;
+        public IApplicationCommands ApplicationCommands
+        {
+            get { return _applicationCommands; }
+            set { SetProperty(ref _applicationCommands, value); }
+        }
+
+        IEventAggregator _ea;
 
 
         public DelegateCommand<object> SelectedItemChangedCommand { get; private set; }
         string baseUrl = "https://addons-ecs.forgesvc.net";
 
-        public CategorysViewModel()
+        public CategorysViewModel(IApplicationCommands applicationCommands, IEventAggregator ea)
         {
+            ApplicationCommands = applicationCommands;
+
+            _ea = ea;
             SelectedItemChangedCommand = new DelegateCommand<object>(SelectedItemChanged);
 
             LoadCategoryAsync();
         }
         void SelectedItemChanged(object obj)
         {
-            CategoryModel model = obj as CategoryModel;
+
+            _ea.GetEvent<MessageSentEvent>().Publish(obj);
+
         }
         void LoadCategoryAsync()
         {
@@ -65,7 +80,7 @@ namespace AddonsDuck2.ViewModels
                 categoryModel.id = item.id;
                 categoryModel.name = item.name;
                 categoryModel.avatarUrl = item.avatarUrl;
-                categoryModel.avatarFile= Duck.GetThumbnailUri(item.avatarUrl, "category", item.id);
+                categoryModel.avatarFile= Tools.GetThumbnailUri(item.avatarUrl, "category", item.id);
                 categoryModel.ChildList = PrepareData(categories, item.id);
 
                 categoryModels.Add(categoryModel);

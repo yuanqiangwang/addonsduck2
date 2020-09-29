@@ -1,4 +1,5 @@
-﻿using AddonsDuck2.Views;
+﻿using AddonsDuck2.Duck;
+using AddonsDuck2.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using System.Windows;
@@ -17,7 +18,7 @@ namespace AddonsDuck2
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterSingleton<IApplicationCommands, ApplicationCommands>();
         }
     }
 }
