@@ -36,7 +36,7 @@ namespace AddonsDuck2.Duck
             if (string.IsNullOrEmpty(url))
             {
 
-                return new Uri("pack://SiteOfOrigin:,,,/wow");
+                return new Uri("pack://SiteOfOrigin:,,,/" + path + "1");
             }
             if (!File.Exists(path + uid.ToString()))
             {
@@ -123,23 +123,9 @@ namespace AddonsDuck2.Duck
 
     }
 
-    public interface IApplicationCommands
-    {
-        CompositeCommand ReloadAddonsCommand { get; }
-    }
-
 
     public class MessageSentEvent : PubSubEvent<object>
     {
     }
 
-
-    public class ApplicationCommands : IApplicationCommands
-    {
-        private CompositeCommand _reloadAddonsCommand = new CompositeCommand();
-        public CompositeCommand ReloadAddonsCommand
-        {
-            get { return _reloadAddonsCommand; }
-        }
-    }
 }

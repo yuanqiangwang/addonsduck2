@@ -23,6 +23,20 @@ namespace AddonsDuck2.Views
         public AddonsView()
         {
             InitializeComponent();
+           
+        }
+
+        private void progressbar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+            if (e.NewValue==0)
+            {
+                progressbar.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                progressbar.Visibility = Visibility.Visible;
+            }
         }
     }
 }

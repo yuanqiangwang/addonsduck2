@@ -6,14 +6,23 @@
     xmlns:local="clr-namespace:AddonsDuck2.Views" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
     xmlns:prism="http://prismlibrary.com/" prism:ViewModelLocator.AutoWireViewModel="True"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" TextElement.Foreground="{DynamicResource MaterialDesignBody}" TextElement.FontWeight="Regular" TextElement.FontSize="13" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto" Background="{DynamicResource MaterialDesignPaper}" FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False"  ItemsSource="{Binding AddonsDisplay}">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24" x:Name="gridRowTips"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="panaleTips" Orientation="Horizontal" Grid.Row="0">
+            <ProgressBar x:Name="progressbar" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="{Binding Progress}" ValueChanged="progressbar_ValueChanged" IsIndeterminate="True" />
+            <Label Content="{Binding TipsString}"/>
+        </StackPanel>
+
+
+
+        <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding AddonsDisplay}">
+
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn 
-                    Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                    EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
-                    
+                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+
                     <DataGridCheckBoxColumn.Header>
                         <Border Background="Transparent">
                             <CheckBox />
@@ -23,15 +32,38 @@
                 <DataGridTemplateColumn Header="" Width="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding Path=thumbnailFile}" Width="20" Height="20"></Image>
+                            <Image Source="{Binding Path=thumbnailFile}" Width="24" Height="24"></Image>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="插件" Binding="{Binding name}" IsReadOnly="True"></DataGridTextColumn>
-                <DataGridTextColumn Header="下载量" Binding="{Binding downloadCount}" IsReadOnly="True"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="本地" Binding="{Binding isLocal}"></DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Header="downloadCount" Binding="{Binding downloadCount}" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="isLocal" Binding="{Binding isLocal}"></DataGridCheckBoxColumn>
+                <DataGridTemplateColumn Header="op" Width="240">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Width="22" Height="22"
+                                      Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                                      ToolTip="">
+                                    <materialDesign:PackIcon Kind="DownloadCircleOutline" Height="20" Width="20" />
+                                </Button>
+                                <Button  Width="22" Height="22"
+                                      Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                                      ToolTip="">
+                                    <materialDesign:PackIcon Kind="Broom" Height="20" Width="20" />
+                                </Button>
+                                <Button  Width="22" Height="22"
+                                      Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                                      ToolTip="">
+                                    <materialDesign:PackIcon Kind="DeleteCircle" Height="20" Width="20" />
+                                </Button>
+                            </StackPanel> 
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+
     </Grid>
 </UserControl>

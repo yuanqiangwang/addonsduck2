@@ -18,7 +18,7 @@ namespace AddonsDuck2
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IApplicationCommands, ApplicationCommands>();
+ 
         }
     }
 }

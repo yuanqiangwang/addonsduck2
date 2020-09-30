@@ -23,10 +23,10 @@
                     <ToggleButton Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
                     <ComboBox SelectedIndex="0" Margin="8 0 0 0" BorderThickness="0" materialDesign:ColorZoneAssist.Mode="Standard" materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource MaterialDesignPaper}" BorderBrush="{DynamicResource MaterialDesignPaper}">
                         <ComboBoxItem>
-                            wow_retail
+                            wow_classic
                         </ComboBoxItem>
                         <ComboBoxItem>
-                            wow_classic
+                            wow_retail
                         </ComboBoxItem>
                     </ComboBox>
                     <materialDesign:ColorZone Mode="Standard" Padding="2 1 2 1" CornerRadius="2" Panel.ZIndex="1" Margin="16 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth1">

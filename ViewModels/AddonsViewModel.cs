@@ -14,6 +14,8 @@ using System.IO;
 using Prism.Commands;
 using AddonsDuck2.Duck;
 using Prism.Events;
+using System.Text.RegularExpressions;
+using static AddonsDuck2.Models.Addon;
 
 namespace AddonsDuck2.ViewModels
 {
@@ -28,6 +30,23 @@ namespace AddonsDuck2.ViewModels
             set { SetProperty(ref _addonsDisplay, value); }
         }
 
+        private int _progress;
+
+        public int Progress
+        {
+            get { return _progress; }
+            set { SetProperty(ref _progress, value); }
+
+        }
+
+        private string _tipsString;
+        public string TipsString
+        {
+            get { return _tipsString; }
+            set { SetProperty(ref _tipsString, value); }
+
+        }
+
 
         /// <summary>
         /// 依赖注入接收
@@ -38,23 +57,23 @@ namespace AddonsDuck2.ViewModels
         public DelegateCommand<object> ReloadAddonsCommand { get; private set; }
 
         private string _gameVersionFlavor = "wow_classic";
+        string addonPath = @"D:\Entertainment\Game\World of Warcraft\_classic_\Interface\AddOns";
 
-        public AddonsViewModel(IApplicationCommands applicationCommands, IEventAggregator ea)//依赖注入 全局command
+        public AddonsViewModel(IEventAggregator ea)//依赖注入 全局command
         {
             _ea = ea;
             _ea.GetEvent<MessageSentEvent>().Subscribe(GetData);
- 
+            _ = DisplayLocal();
         }
 
         public async void GetData(object obj)
         {
+            List<AddonDisplay> addonDisplays = new List<AddonDisplay>();
             CategoryModel categoryModel = obj as CategoryModel;
-
-
-            string json = await AddonSearchAsync(categoryModel.id==1?0: categoryModel.id, 0, _gameVersionFlavor, 20);
-            FilterAddons(json);
+            string json = await AddonSearchAsync(categoryModel.id == 1 ? 0 : categoryModel.id, 0, _gameVersionFlavor, 20);
+            FilterAddons(json, addonDisplays);
+            AddonsDisplay = new ObservableCollection<AddonDisplay>(addonDisplays);
         }
-
 
         private async Task<string> AddonSearchAsync(int categoryId, int _index, string gameVersionFlavor, int pagesize = 0, string searchFilter = "")
         {
@@ -88,11 +107,9 @@ namespace AddonsDuck2.ViewModels
                 return null;
             }
         }
-
-
-        private void FilterAddons(string addonsJson)
+        
+        private void FilterAddons(string addonsJson, List<AddonDisplay> addonDisplays,string localVersion="")
         {
-            List<AddonDisplay> list = new List<AddonDisplay>();
             List<Addon> addons = JsonConvert.DeserializeObject<List<Addon>>(addonsJson);
             foreach (Addon addon in addons)
             {
@@ -100,22 +117,100 @@ namespace AddonsDuck2.ViewModels
                       .Find(x => x.gameVersionFlavor == _gameVersionFlavor);
                 if (latestFile != null)
                 {
-                    AddonDisplay addonDisplay = new AddonDisplay();
-                    addonDisplay.id = addon.id;
-                    addonDisplay.name = addon.name;
-                    addonDisplay.websiteUrl = addon.websiteUrl;
-                    addonDisplay.summary = addon.summary;
-                    addonDisplay.downloadCount = Tools.FormatNum(addon.downloadCount);
-                    addonDisplay.thumbnailUrl = addon.attachments.Count > 0 ?
+
+                    if (addonDisplays != null && addonDisplays.Find(x => x.id == addon.id) != null)
+                    {
+                        continue;
+                    }
+                    AddonDisplay display = new AddonDisplay();
+                    display.id = addon.id;
+                    display.name = addon.name;
+                    display.websiteUrl = addon.websiteUrl;
+                    display.summary = addon.summary;
+                    display.downloadCount = Tools.FormatNum(addon.downloadCount);
+                    display.thumbnailUrl = addon.attachments.Count > 0 ?
                         addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : "";
-                    addonDisplay.thumbnailFile = Tools.GetThumbnailUri(addonDisplay.thumbnailUrl, "addon", addonDisplay.id);
-
-
-                    list.Add(addonDisplay);
+                    display.thumbnailFile = Tools.GetThumbnailUri(display.thumbnailUrl, "addon", display.id);
+                    display.isLocal = !string.IsNullOrEmpty(localVersion);
+                    display.localVersion = localVersion;
+                    
+                    addonDisplays.Add(display);
                 }
             }
-            AddonsDisplay = new ObservableCollection<AddonDisplay>(list);
+        }
 
+        private async Task<bool> DisplayLocal()
+        {
+            List<AddonDisplay> addonDisplays = new List<AddonDisplay>();
+            List<string> localAddons = ScanLocalAddonsModule(addonPath);
+
+            foreach (string item in localAddons)
+            {
+                string addonmodule = item.Split('|')[0];
+                string version = item.Split('|')[1];
+                Progress = localAddons.IndexOf(item) * 100 / localAddons.Count;
+                TipsString = addonmodule;
+                string json = await AddonSearchAsync(0, 0, _gameVersionFlavor, 1, addonmodule);
+                FilterAddons(json, addonDisplays, version);
+            }
+            Progress = 0;
+            TipsString = "";
+            
+
+            AddonsDisplay = new ObservableCollection<AddonDisplay>(addonDisplays);
+            return true;
+        }
+
+        private List<string> ScanLocalAddonsModule(string addonPath)
+        {
+            List<string> localAddons = new List<string>();
+            DirectoryInfo directoryInfo = new DirectoryInfo(addonPath);
+            foreach (DirectoryInfo directory in directoryInfo.GetDirectories())
+            {
+                foreach (FileInfo file in directory.GetFiles())
+                {
+                    if (file.Extension == ".toc")
+                    {
+                        if (file.Name == "DBM-StatusBarTimers")
+                        {
+                            continue;
+                        }
+                        string filepath = file.FullName;
+                        string strContent = File.ReadAllText(filepath);
+                        string patternDependencies = "## Dependencies:(?'key'.*)\\r?\\n?";
+                        string patternRequiredDeps = "## RequiredDeps:(?'key'.*)\\r?\\n?";
+
+                        string patternVersion = "## Version:(?'key'.*)\\r?\\n?";
+
+                        string Version = Regex.Match(strContent, patternVersion, RegexOptions.IgnoreCase).Success ?
+                                Regex.Match(strContent, patternVersion, RegexOptions.IgnoreCase).Groups["key"].Value : "";
+                        //## RequiredDeps: DBM-Core
+                        //## Dependencies: Details
+                        string requiredDepsOrDependencies =
+    Regex.Match(strContent, patternDependencies, RegexOptions.IgnoreCase).Success ?
+    Regex.Match(strContent, patternDependencies, RegexOptions.IgnoreCase).Groups["key"].Value :
+    Regex.Match(strContent, patternRequiredDeps, RegexOptions.IgnoreCase).Success ?
+    Regex.Match(strContent, patternRequiredDeps, RegexOptions.IgnoreCase).Groups["key"].Value : "";
+                        requiredDepsOrDependencies = requiredDepsOrDependencies.Trim();
+
+
+                        string localaddoninfo = "";
+
+                        if (requiredDepsOrDependencies == "" || file.Directory.Name == "DBM-Core")
+                        {
+                            localaddoninfo = file.Directory.Name + "|" + Version;
+                        }
+
+                        if (!localAddons.Contains(localaddoninfo)
+                            && !string.IsNullOrEmpty(localaddoninfo))
+                        {
+                            localAddons.Add(localaddoninfo);
+                        }
+
+                    }
+                }
+            }
+            return localAddons;
         }
     }
 }

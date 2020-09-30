@@ -25,33 +25,23 @@ namespace AddonsDuck2.ViewModels
             set { SetProperty(ref _categories, value); }
 
         }
-        private IApplicationCommands _applicationCommands;
-        public IApplicationCommands ApplicationCommands
-        {
-            get { return _applicationCommands; }
-            set { SetProperty(ref _applicationCommands, value); }
-        }
 
-        IEventAggregator _ea;
+        private IEventAggregator _ea;
 
 
         public DelegateCommand<object> SelectedItemChangedCommand { get; private set; }
         string baseUrl = "https://addons-ecs.forgesvc.net";
 
-        public CategorysViewModel(IApplicationCommands applicationCommands, IEventAggregator ea)
+        public CategorysViewModel(IEventAggregator ea)
         {
-            ApplicationCommands = applicationCommands;
-
             _ea = ea;
+      
             SelectedItemChangedCommand = new DelegateCommand<object>(SelectedItemChanged);
-
             LoadCategoryAsync();
         }
         void SelectedItemChanged(object obj)
         {
-
             _ea.GetEvent<MessageSentEvent>().Publish(obj);
-
         }
         void LoadCategoryAsync()
         {
@@ -68,12 +58,8 @@ namespace AddonsDuck2.ViewModels
         }
         private ObservableCollection<CategoryModel> PrepareData(List<Category> categories, int? id)
         {
-
             var _categories = categories.FindAll(t => t.parentGameCategoryId == id).OrderBy(t => t.id);
-
             List<CategoryModel> categoryModels = new List<CategoryModel>();
-
-
             foreach (Category item in _categories)
             {
                 CategoryModel categoryModel = new CategoryModel();
@@ -82,14 +68,9 @@ namespace AddonsDuck2.ViewModels
                 categoryModel.avatarUrl = item.avatarUrl;
                 categoryModel.avatarFile= Tools.GetThumbnailUri(item.avatarUrl, "category", item.id);
                 categoryModel.ChildList = PrepareData(categories, item.id);
-
                 categoryModels.Add(categoryModel);
             }
-
-
             return new ObservableCollection<CategoryModel>(categoryModels);
-
-
         }
     }
 }
