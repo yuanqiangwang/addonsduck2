@@ -45,17 +45,17 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Width="22" Height="22"
                                       Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                                      ToolTip="">
+                                      ToolTip="Download">
                                     <materialDesign:PackIcon Kind="DownloadCircleOutline" Height="20" Width="20" />
                                 </Button>
                                 <Button  Width="22" Height="22"
                                       Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                                      ToolTip="">
+                                      ToolTip="Broom">
                                     <materialDesign:PackIcon Kind="Broom" Height="20" Width="20" />
                                 </Button>
                                 <Button  Width="22" Height="22"
                                       Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-                                      ToolTip="">
+                                      ToolTip="Delete">
                                     <materialDesign:PackIcon Kind="DeleteCircle" Height="20" Width="20" />
                                 </Button>
                             </StackPanel> 

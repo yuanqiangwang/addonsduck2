@@ -25,7 +25,7 @@ namespace AddonsDuck2.ViewModels
             set { SetProperty(ref _categories, value); }
 
         }
-
+        string categoryJson;
         private IEventAggregator _ea;
 
 
@@ -49,9 +49,17 @@ namespace AddonsDuck2.ViewModels
             {
                 Timeout = -1
             };
-            var request = new RestRequest("/api/v2/category", Method.GET);
-            IRestResponse response = client.Execute(request);
-            string categoryJson = response.Content;
+            
+            categoryJson = Duck.Tools.GetCatcheData("Categorys", "Categorys");
+
+            if (string.IsNullOrEmpty(categoryJson))
+            {
+                var request = new RestRequest("/api/v2/category", Method.GET);
+                IRestResponse response = client.Execute(request);
+                categoryJson = response.Content;
+                Duck.Tools.SaveData(categoryJson, "Catche", "Categorys");
+            }
+
             List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(categoryJson).FindAll(x => x.gameId == 1); ;
             Categories = new ObservableCollection<CategoryModel>();
             Categories = PrepareData(categories, null);

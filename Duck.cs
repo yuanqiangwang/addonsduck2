@@ -1,4 +1,8 @@
-﻿using Prism.Commands;
+﻿using AddonsDuck2.Models;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
+using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -44,7 +48,7 @@ namespace AddonsDuck2.Duck
             }
 
 
-            return new Uri("pack://SiteOfOrigin:,,,/"+ path + uid.ToString());
+            return new Uri("pack://SiteOfOrigin:,,,/" + path + uid.ToString());
         }
 
         public static async void SaveThumbnail(string url, string path, int uid)
@@ -66,6 +70,45 @@ namespace AddonsDuck2.Duck
         }
 
 
+        public static string GetCatcheData(string type ,string key)
+        {
+
+
+            if (!System.IO.File.Exists(@"Catche\" + key))
+                return string.Empty;
+
+            string jsondata = File.ReadAllText(@"Catche\" + key);
+            //todo:校验缓存数据是否合法
+            if (type == "Categorys")
+            {
+                JSchema schema = new JSchemaGenerator().Generate(typeof(CategoryModel));
+                JToken token = JToken.Parse(jsondata);
+                if (token.IsValid(schema))
+                    jsondata = string.Empty;
+            }
+
+            if (type == "Addons")
+            {
+                JSchema schema = new JSchemaGenerator().Generate(typeof(Addon));
+                JToken token = JToken.Parse(jsondata);
+                if (token.IsValid(schema))
+                    jsondata = string.Empty;
+            }
+
+
+            return jsondata;
+
+        }
+        public static void SaveData(string str, string path, string name)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            using (StreamWriter sw = new StreamWriter(path+@"\"+name, false))
+            {
+                sw.Write(str);
+            }
+        }
+
         public static string FormatNum(decimal longnum)
         {
             string formatednum;
@@ -74,7 +117,7 @@ namespace AddonsDuck2.Duck
             else if (longnum > 10000)
                 formatednum = Math.Round(longnum / 10000, 0).ToString() + "万";
             else
-                formatednum = Math.Round(longnum,0).ToString();
+                formatednum = Math.Round(longnum, 0).ToString();
 
 
             return formatednum;

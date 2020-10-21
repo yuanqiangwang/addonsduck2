@@ -63,7 +63,7 @@ namespace AddonsDuck2.ViewModels
         {
             _ea = ea;
             _ea.GetEvent<MessageSentEvent>().Subscribe(GetData);
-            _ = DisplayLocal();
+            //_ = DisplayLocal();
         }
 
         public async void GetData(object obj)
@@ -86,8 +86,8 @@ namespace AddonsDuck2.ViewModels
             {
                 resource += string.Format("&searchFilter={0}", searchFilter);
             }
-
-            if (pagesize != 0)//检索不分页
+            
+            if (pagesize != 0)//检索不分页，不分页最大返回结果数量是500
             {
                 resource += string.Format("&pageSize={0}", pagesize);
             }
@@ -96,16 +96,21 @@ namespace AddonsDuck2.ViewModels
             {
                 resource += string.Format("&gameVersionFlavor={0}", gameVersionFlavor);
             }
-            var request = new RestRequest(resource, Method.GET);
-            var response = await client.ExecuteGetAsync(request);
-            if (response.IsSuccessful)
+
+            //categoryId={categoryID}&gameId={gameId}&gameVersion={gameVersion}&index={index}&pageSize={pageSize}5&searchFilter={searchFilter}
+            string key = "0&1&wow_classic&1&20";
+
+            string addonsJson = "";
+            addonsJson = Duck.Tools.GetCatcheData("Addons", key);
+
+            if (string.IsNullOrEmpty(addonsJson))
             {
-                return response.Content;
+                var request = new RestRequest(resource, Method.GET);
+                var response = await client.ExecuteGetAsync(request);
+                addonsJson = response.IsSuccessful ? response.Content : string.Empty;
+                Duck.Tools.SaveData("Addons", "Catche", key);
             }
-            else
-            {
-                return null;
-            }
+            return addonsJson;
         }
         
         private void FilterAddons(string addonsJson, List<AddonDisplay> addonDisplays,string localVersion="")
@@ -122,14 +127,19 @@ namespace AddonsDuck2.ViewModels
                     {
                         continue;
                     }
-                    AddonDisplay display = new AddonDisplay();
-                    display.id = addon.id;
-                    display.name = addon.name;
-                    display.websiteUrl = addon.websiteUrl;
-                    display.summary = addon.summary;
-                    display.downloadCount = Tools.FormatNum(addon.downloadCount);
-                    display.thumbnailUrl = addon.attachments.Count > 0 ?
-                        addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : "";
+                    AddonDisplay display = new AddonDisplay
+                    {
+                        id = addon.id,
+                        name = addon.name,
+                        websiteUrl = addon.websiteUrl,
+                        summary = addon.summary,
+                        downloadCount = Tools.FormatNum(addon.downloadCount),
+                        dateCreated = addon.dateCreated,
+                        dateModified=addon.dateModified,
+                        dateReleased=addon.dateReleased,
+                        thumbnailUrl = addon.attachments.Count > 0 ?
+                        addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : ""
+                    };
                     display.thumbnailFile = Tools.GetThumbnailUri(display.thumbnailUrl, "addon", display.id);
                     display.isLocal = !string.IsNullOrEmpty(localVersion);
                     display.localVersion = localVersion;

@@ -103,15 +103,15 @@ namespace AddonsDuck2.Models
         /// <summary>
         /// 
         /// </summary>
-        public string dateModified { get; set; }
+        public DateTime dateModified { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public string dateCreated { get; set; }
+        public DateTime dateCreated { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public string dateReleased { get; set; }
+        public DateTime dateReleased { get; set; }
         /// <summary>
         /// 
         /// </summary>

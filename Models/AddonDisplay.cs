@@ -17,8 +17,16 @@ namespace AddonsDuck2.Models
         public string downloadCount { get; set; }
         public List<Addon.Module> modules { get; set; }
         public List<Addon.LatestFile> latestFiles { get; set; }
+
+
+        public DateTime dateReleased { get; set; }
+        public DateTime dateModified { get; set; }
+        public DateTime dateCreated { get; set; }
+
+
         public string thumbnailUrl { get; set; }
         public Uri thumbnailFile { get; set; }
+
 
 
         public bool isSelected { get; set; }
