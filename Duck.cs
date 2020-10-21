@@ -78,7 +78,6 @@ namespace AddonsDuck2.Duck
                 return string.Empty;
 
             string jsondata = File.ReadAllText(@"Catche\" + key);
-            //todo:校验缓存数据是否合法
             if (type == "Categorys")
             {
                 JSchema schema = new JSchemaGenerator().Generate(typeof(CategoryModel));
