@@ -60,20 +60,15 @@ namespace AddonsDuck2.Duck
             {
                 return;
             }
-
             using (WebClient wc = new WebClient())
             {
                 await wc.DownloadFileTaskAsync(new Uri(url), path + uid.ToString());
             }
-
-
         }
 
 
         public static string GetCatcheData(string type ,string key)
         {
-
-
             if (!System.IO.File.Exists(@"Catche\" + key))
                 return string.Empty;
 
@@ -112,7 +107,7 @@ namespace AddonsDuck2.Duck
         {
             string formatednum;
             if (longnum > 100000000)
-                formatednum = Math.Round(longnum / 100000000, 2).ToString() + "亿";
+                formatednum = Math.Round(longnum / 100000000, 1).ToString() + "亿";
             else if (longnum > 10000)
                 formatednum = Math.Round(longnum / 10000, 0).ToString() + "万";
             else

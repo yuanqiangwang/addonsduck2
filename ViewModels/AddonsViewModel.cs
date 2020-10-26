@@ -16,6 +16,7 @@ using AddonsDuck2.Duck;
 using Prism.Events;
 using System.Text.RegularExpressions;
 using static AddonsDuck2.Models.Addon;
+using System.Collections.Concurrent;
 
 namespace AddonsDuck2.ViewModels
 {
@@ -56,6 +57,16 @@ namespace AddonsDuck2.ViewModels
         IEventAggregator _ea;
         public DelegateCommand<object> ReloadAddonsCommand { get; private set; }
 
+        public DelegateCommand<AddonDisplay> DownloadAddonCammond { get; private set; }
+
+        private ObservableQueue<AddonDisplay> _addonQueue;
+        public ObservableQueue<AddonDisplay> AddonQueue
+        {
+            get { return _addonQueue; }
+            set { SetProperty(ref _addonQueue, value); }
+
+        }
+
         private string _gameVersionFlavor = "wow_classic";
         string addonPath = @"D:\Entertainment\Game\World of Warcraft\_classic_\Interface\AddOns";
 
@@ -64,6 +75,17 @@ namespace AddonsDuck2.ViewModels
             _ea = ea;
             _ea.GetEvent<MessageSentEvent>().Subscribe(GetData);
             //_ = DisplayLocal();
+
+            DownloadAddonCammond = new DelegateCommand<AddonDisplay>(AddToQueue);
+            AddonQueue = new ObservableQueue<AddonDisplay>();
+        }
+
+        void AddToQueue(AddonDisplay addon)
+        {
+
+            AddonQueue.Enqueue(addon);
+
+            
         }
 
         public async void GetData(object obj)
@@ -86,7 +108,7 @@ namespace AddonsDuck2.ViewModels
             {
                 resource += string.Format("&searchFilter={0}", searchFilter);
             }
-            
+
             if (pagesize != 0)//检索不分页，不分页最大返回结果数量是500
             {
                 resource += string.Format("&pageSize={0}", pagesize);
@@ -112,8 +134,8 @@ namespace AddonsDuck2.ViewModels
             }
             return addonsJson;
         }
-        
-        private void FilterAddons(string addonsJson, List<AddonDisplay> addonDisplays,string localVersion="")
+
+        private void FilterAddons(string addonsJson, List<AddonDisplay> addonDisplays, string localVersion = "")
         {
             List<Addon> addons = JsonConvert.DeserializeObject<List<Addon>>(addonsJson);
             foreach (Addon addon in addons)
@@ -135,15 +157,15 @@ namespace AddonsDuck2.ViewModels
                         summary = addon.summary,
                         downloadCount = Tools.FormatNum(addon.downloadCount),
                         dateCreated = addon.dateCreated,
-                        dateModified=addon.dateModified,
-                        dateReleased=addon.dateReleased,
+                        dateModified = addon.dateModified,
+                        dateReleased = addon.dateReleased,
                         thumbnailUrl = addon.attachments.Count > 0 ?
                         addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : ""
                     };
                     display.thumbnailFile = Tools.GetThumbnailUri(display.thumbnailUrl, "addon", display.id);
                     display.isLocal = !string.IsNullOrEmpty(localVersion);
                     display.localVersion = localVersion;
-                    
+
                     addonDisplays.Add(display);
                 }
             }
@@ -165,7 +187,7 @@ namespace AddonsDuck2.ViewModels
             }
             Progress = 0;
             TipsString = "";
-            
+
 
             AddonsDisplay = new ObservableCollection<AddonDisplay>(addonDisplays);
             return true;

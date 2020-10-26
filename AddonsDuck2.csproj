@@ -77,6 +77,7 @@
     <Compile Include="Models\Addon.cs" />
     <Compile Include="Models\AddonDisplay.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="ObservableQueue.cs" />
     <Compile Include="ViewModels\AddonsViewModel.cs" />
     <Compile Include="ViewModels\CategorysViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
