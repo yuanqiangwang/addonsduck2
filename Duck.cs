@@ -34,9 +34,6 @@ namespace AddonsDuck2.Duck
                 default:
                     break;
             }
-
-
-
             if (string.IsNullOrEmpty(url))
             {
 
@@ -44,25 +41,25 @@ namespace AddonsDuck2.Duck
             }
             if (!File.Exists(path + uid.ToString()))
             {
-                SaveThumbnail(url, path, uid);
+                DownloadFile(url, path, uid.ToString());
             }
 
 
             return new Uri("pack://SiteOfOrigin:,,,/" + path + uid.ToString());
         }
 
-        public static async void SaveThumbnail(string url, string path, int uid)
+        public static async void DownloadFile(string url, string path, string filename)
         {
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            if (System.IO.File.Exists(path + uid))
+            if (System.IO.File.Exists(path + filename))
             {
                 return;
             }
             using (WebClient wc = new WebClient())
             {
-                await wc.DownloadFileTaskAsync(new Uri(url), path + uid.ToString());
+                await wc.DownloadFileTaskAsync(new Uri(url), path + filename.ToString());
             }
         }
 

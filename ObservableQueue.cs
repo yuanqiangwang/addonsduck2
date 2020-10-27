@@ -11,7 +11,7 @@ namespace AddonsDuck2
 {
     class ObservableQueue<T> : ConcurrentQueue<T>, INotifyCollectionChanged
     {
-
+        
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public new void Enqueue(T item)
         {

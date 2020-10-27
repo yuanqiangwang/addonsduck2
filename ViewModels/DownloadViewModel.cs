@@ -7,11 +7,12 @@ using Prism.Events;
 using Prism.Mvvm;
 using AddonsDuck2.Models;
 using AddonsDuck2.Duck;
-
+using System.Net;
+using System.IO;
 
 namespace AddonsDuck2.ViewModels
 {
-    class DownloadViewModel:BindableBase
+    class DownloadViewModel : BindableBase
     {
         IEventAggregator _ea;
         private ObservableQueue<AddonDisplay> _addonQueue;
@@ -32,5 +33,16 @@ namespace AddonsDuck2.ViewModels
         {
             AddonQueue.Enqueue(obj);
         }
+
+        private void Start()
+        {
+
+        }
+
+        //private async Task<bool> DownLoad(AddonDisplay addon)
+        //{
+            
+        //}
+
     }
 }

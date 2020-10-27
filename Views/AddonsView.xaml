@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="24" x:Name="gridRowTips"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel x:Name="panaleTips" Orientation="Horizontal" Grid.Row="0">
             <ProgressBar x:Name="progressbar" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="{Binding Progress}" ValueChanged="progressbar_ValueChanged" IsIndeterminate="True" />
@@ -22,14 +21,14 @@
         <DataGrid x:Name="addonsDisplay" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding AddonsDisplay}">
 
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                <!--<DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
 
                     <DataGridCheckBoxColumn.Header>
                         <Border Background="Transparent">
                             <CheckBox />
                         </Border>
                     </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
+                </DataGridCheckBoxColumn>-->
                 <DataGridTemplateColumn Header="" Width="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -40,6 +39,7 @@
                 <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Header="downloadCount" Binding="{Binding downloadCount}" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridCheckBoxColumn Header="isLocal" Binding="{Binding isLocal}"></DataGridCheckBoxColumn>
+                <!--操作按钮-->
                 <DataGridTemplateColumn Header="op" Width="240">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -60,13 +60,11 @@
                                       ToolTip="Delete">
                                     <materialDesign:PackIcon Kind="DeleteCircle" Height="20" Width="20" />
                                 </Button>-->
-                            </StackPanel> 
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
-        <ListView Grid.Row="2" ItemsSource="{Binding AddonQueue}" ></ListView>
     </Grid>
 </UserControl>

@@ -65,11 +65,11 @@ namespace AddonsDuck2.ViewModels
             _ea.GetEvent<CategoryChangedEvent>().Subscribe(GetData);
             //_ = DisplayLocal();
 
-            DownloadAddonCammond = new DelegateCommand<AddonDisplay>(Add2Download);
+            DownloadAddonCammond = new DelegateCommand<AddonDisplay>(AddToDownload);
       
         }
 
-        void Add2Download(AddonDisplay addon)
+        void AddToDownload(AddonDisplay addon)
         {
             _ea.GetEvent<DownloadAddedEvent>().Publish(addon);
         }
@@ -146,11 +146,13 @@ namespace AddonsDuck2.ViewModels
                         dateModified = addon.dateModified,
                         dateReleased = addon.dateReleased,
                         thumbnailUrl = addon.attachments.Count > 0 ?
-                        addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : ""
-                    };
+                        addon.attachments.Find(x => x.isDefault) != null ? addon.attachments.Find(x => x.isDefault).thumbnailUrl : "" : "",
+                        latestFiles = addon.latestFiles.FindAll(x => x.gameVersionFlavor == _gameVersionFlavor).OrderBy(x => x.releaseType).ToList()
+                };
                     display.thumbnailFile = Tools.GetThumbnailUri(display.thumbnailUrl, "addon", display.id);
                     display.isLocal = !string.IsNullOrEmpty(localVersion);
                     display.localVersion = localVersion;
+                    
 
                     addonDisplays.Add(display);
                 }

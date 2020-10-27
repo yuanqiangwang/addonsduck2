@@ -38,5 +38,6 @@ namespace AddonsDuck2.Views
                 progressbar.Visibility = Visibility.Visible;
             }
         }
+
     }
 }
