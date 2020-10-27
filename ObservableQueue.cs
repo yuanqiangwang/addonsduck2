@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AddonsDuck2
 {
-    class ObservableQueue<T> : ConcurrentQueue<T>, INotifyPropertyChanged, INotifyCollectionChanged
+    class ObservableQueue<T> : ConcurrentQueue<T>, INotifyCollectionChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public new void Enqueue(T item)
         {
