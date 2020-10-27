@@ -61,7 +61,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CategorysView.xaml">
+    <Page Include="Views\CategoriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DownloadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -79,13 +83,17 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="ObservableQueue.cs" />
     <Compile Include="ViewModels\AddonsViewModel.cs" />
-    <Compile Include="ViewModels\CategorysViewModel.cs" />
+    <Compile Include="ViewModels\CategoriesViewModel.cs" />
+    <Compile Include="ViewModels\DownloadViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\AddonsView.xaml.cs">
       <DependentUpon>AddonsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CategorysView.xaml.cs">
-      <DependentUpon>CategorysView.xaml</DependentUpon>
+    <Compile Include="Views\CategoriesView.xaml.cs">
+      <DependentUpon>CategoriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DownloadView.xaml.cs">
+      <DependentUpon>DownloadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

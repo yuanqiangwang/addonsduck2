@@ -18,9 +18,9 @@ namespace AddonsDuck2.Views
     /// <summary>
     /// CategoryView.xaml 的交互逻辑
     /// </summary>
-    public partial class CategorysView : UserControl
+    public partial class CategoriesView : UserControl
     {
-        public CategorysView()
+        public CategoriesView()
         {
             InitializeComponent();
         }

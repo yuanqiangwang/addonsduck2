@@ -16,7 +16,7 @@ using Prism.Events;
 
 namespace AddonsDuck2.ViewModels
 {
-    class CategorysViewModel : BindableBase
+    class CategoriesViewModel : BindableBase
     {
         private ObservableCollection<CategoryModel> _categories;
         public ObservableCollection<CategoryModel> Categories
@@ -32,7 +32,7 @@ namespace AddonsDuck2.ViewModels
         public DelegateCommand<object> SelectedItemChangedCommand { get; private set; }
         string baseUrl = "https://addons-ecs.forgesvc.net";
 
-        public CategorysViewModel(IEventAggregator ea)
+        public CategoriesViewModel(IEventAggregator ea)
         {
             _ea = ea;
       
@@ -41,7 +41,7 @@ namespace AddonsDuck2.ViewModels
         }
         void SelectedItemChanged(object obj)
         {
-            _ea.GetEvent<MessageSentEvent>().Publish(obj);
+            _ea.GetEvent<CategoryChangedEvent>().Publish(obj);
         }
         void LoadCategoryAsync()
         {

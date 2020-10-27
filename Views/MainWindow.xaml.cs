@@ -11,8 +11,9 @@ namespace AddonsDuck2.Views
         public MainWindow(RegionManager regionManager)
         {
             InitializeComponent();
-            regionManager.RegisterViewWithRegion("CategorysRegion", typeof(CategorysView));
+            regionManager.RegisterViewWithRegion("CategoriesRegion", typeof(CategoriesView));
             regionManager.RegisterViewWithRegion("AddonsRegion", typeof(AddonsView));
+            regionManager.RegisterViewWithRegion("DownloadListRegion", typeof(DownloadView));
         }
     }
 }

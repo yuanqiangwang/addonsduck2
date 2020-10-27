@@ -161,8 +161,10 @@ namespace AddonsDuck2.Duck
     }
 
 
-    public class MessageSentEvent : PubSubEvent<object>
+    public class CategoryChangedEvent : PubSubEvent<object>
     {
     }
-
+    public class DownloadAddedEvent : PubSubEvent<AddonDisplay>
+    {
+    }
 }

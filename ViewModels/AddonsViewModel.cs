@@ -49,23 +49,12 @@ namespace AddonsDuck2.ViewModels
         }
 
 
-        /// <summary>
-        /// 依赖注入接收
-        /// </summary>
-        //IApplicationCommands _applicationCommands;
-
         IEventAggregator _ea;
         public DelegateCommand<object> ReloadAddonsCommand { get; private set; }
 
         public DelegateCommand<AddonDisplay> DownloadAddonCammond { get; private set; }
 
-        private ObservableQueue<AddonDisplay> _addonQueue;
-        public ObservableQueue<AddonDisplay> AddonQueue
-        {
-            get { return _addonQueue; }
-            set { SetProperty(ref _addonQueue, value); }
 
-        }
 
         private string _gameVersionFlavor = "wow_classic";
         string addonPath = @"D:\Entertainment\Game\World of Warcraft\_classic_\Interface\AddOns";
@@ -73,19 +62,16 @@ namespace AddonsDuck2.ViewModels
         public AddonsViewModel(IEventAggregator ea)//依赖注入 全局command
         {
             _ea = ea;
-            _ea.GetEvent<MessageSentEvent>().Subscribe(GetData);
+            _ea.GetEvent<CategoryChangedEvent>().Subscribe(GetData);
             //_ = DisplayLocal();
 
-            DownloadAddonCammond = new DelegateCommand<AddonDisplay>(AddToQueue);
-            AddonQueue = new ObservableQueue<AddonDisplay>();
+            DownloadAddonCammond = new DelegateCommand<AddonDisplay>(Add2Download);
+      
         }
 
-        void AddToQueue(AddonDisplay addon)
+        void Add2Download(AddonDisplay addon)
         {
-
-            AddonQueue.Enqueue(addon);
-
-            
+            _ea.GetEvent<DownloadAddedEvent>().Publish(addon);
         }
 
         public async void GetData(object obj)
