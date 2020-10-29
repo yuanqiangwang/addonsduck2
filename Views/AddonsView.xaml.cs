@@ -29,13 +29,16 @@ namespace AddonsDuck2.Views
         private void progressbar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
+
             if (e.NewValue==0)
             {
                 progressbar.Visibility = Visibility.Collapsed;
+                panaleTips.Visibility = Visibility.Collapsed;
             }
             else
             {
                 progressbar.Visibility = Visibility.Visible;
+                panaleTips.Visibility = Visibility.Visible;
             }
         }
 

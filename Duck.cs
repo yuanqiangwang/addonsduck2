@@ -14,9 +14,29 @@ using System.Threading.Tasks;
 
 namespace AddonsDuck2.Duck
 {
+    public static class AppData
+    {
+        /// <summary>
+        /// 游戏路径
+        /// </summary>
+        public static string WowPath { get; set; }
+
+        /// <summary>
+        /// 游戏版本
+        /// </summary>
+        public static string GameVersionFlavor { get; set; }
+
+        /// <summary>
+        /// 游戏版本对应的 插件路径
+        /// </summary>
+        public static string AddOnsPath { get; set; }
+
+
+        public static string ForgesvcBaseUrl { get; set; }
+    }
+
     public static class Tools
     {
-
         public static Uri GetThumbnailUri(string url, string type, int uid)
         {
             string path = @"Thumbnail";
@@ -47,7 +67,6 @@ namespace AddonsDuck2.Duck
 
             return new Uri("pack://SiteOfOrigin:,,,/" + path + uid.ToString());
         }
-
         public static async void DownloadFile(string url, string path, string filename)
         {
 
@@ -62,9 +81,7 @@ namespace AddonsDuck2.Duck
                 await wc.DownloadFileTaskAsync(new Uri(url), path + filename.ToString());
             }
         }
-
-
-        public static string GetCatcheData(string type ,string key)
+        public static string GetCatcheData(string type, string key)
         {
             if (!System.IO.File.Exists(@"Catche\" + key))
                 return string.Empty;
@@ -94,12 +111,11 @@ namespace AddonsDuck2.Duck
         {
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            using (StreamWriter sw = new StreamWriter(path+@"\"+name, false))
+            using (StreamWriter sw = new StreamWriter(path + @"\" + name, false))
             {
                 sw.Write(str);
             }
         }
-
         public static string FormatNum(decimal longnum)
         {
             string formatednum;
@@ -113,7 +129,6 @@ namespace AddonsDuck2.Duck
 
             return formatednum;
         }
-
         public static string DateStringFromNow(DateTime dt)
         {
             TimeSpan span = DateTime.Now - dt;
@@ -154,10 +169,7 @@ namespace AddonsDuck2.Duck
                 return "1秒前";
             }
         }
-
     }
-
-
     public class CategoryChangedEvent : PubSubEvent<object>
     {
     }

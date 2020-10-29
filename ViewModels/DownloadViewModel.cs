@@ -20,7 +20,6 @@ namespace AddonsDuck2.ViewModels
         {
             get { return _addonQueue; }
             set { SetProperty(ref _addonQueue, value); }
-
         }
         public DownloadViewModel(IEventAggregator ea)//依赖注入 全局command
         {
@@ -31,12 +30,25 @@ namespace AddonsDuck2.ViewModels
 
         private void Add(AddonDisplay obj)
         {
+            if (AddonQueue.Count==0)
+            {
+                Start();
+            }
+
+
+            if (AddonQueue.Contains(obj))
+            {
+                return;
+            }
             AddonQueue.Enqueue(obj);
         }
 
         private void Start()
         {
-
+            while (AddonQueue.Count!=0)
+            {
+                //doanload
+            }
         }
 
         //private async Task<bool> DownLoad(AddonDisplay addon)
